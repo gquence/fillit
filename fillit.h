@@ -3,4 +3,8 @@
 
 # include "libft/includes/libft.h"
 
+char	zero = '0';
+char	one = '1';
+
+
 #endif

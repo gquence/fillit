@@ -9,18 +9,16 @@
 		0 - строка соответвуется всем требованиям, ошибка в выделении памяти
 		-1 - строка или число не соответствуют каким-либо требованиям
 */
-char	zero = '0';
-char	one = '1';
 
 typedef enum	e_tetra_id
 {
-	error			= 0,
-	quad			= 1,
-	i_vertical		= 2,
+	error				= 0,
+	quad				= 1,
+	i_vertical			= 2,
 	i_horizontal		= 4,
-	z_vertical		= 8,
+	z_vertical			= 8,
 	z_horizontal		= 16,
-	s_vertical		= 32,
+	s_vertical			= 32,
 	s_horizontal		= 64,
 	l_vertical_up		= 128,
 	l_vertical_down		= 256,
@@ -30,10 +28,10 @@ typedef enum	e_tetra_id
 	j_vertical_down		= 4096,
 	j_horizontal_right	= 8192,
 	j_horizontal_left	= 16384,
-	t_up			= 32768,
-	t_right			= 65536,
-	t_down			= 131072,
-	t_left			= 262144
+	t_up				= 32768,
+	t_right				= 65536,
+	t_down				= 131072,
+	t_left				= 262144
 }		t_tetro_id;
 
 
