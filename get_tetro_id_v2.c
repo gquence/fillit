@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "fillit.h"
 
-int		count_skip_rows(char *str)
+int		count_skip_rows(const char *str)
 {
 	int count;
 
@@ -14,7 +14,7 @@ int		count_skip_rows(char *str)
 	return (count / 4);
 }
 
-int		count_skip_columns(char *str)
+int		count_skip_columns(const char *str)
 {
 	int	count;
 	int	i;
@@ -34,12 +34,17 @@ int		count_skip_columns(char *str)
 			count++;
 		}
 		if (count == 4)
-			reutrn(-1);
+			return(-1);
 	}
 	return (count);
 }
-
+/*
 int main()
 {
+	char *str = "0000000000110011";
+	printf("%d\\%d", count_skip_rows(str), count_skip_columns(str));
+	printf("\n2%s\n", str);
+	str = str + count_skip_rows(str) *4 + count_skip_columns(str);
+	printf("2%s", str);
 	return (0);
-}
+}*/

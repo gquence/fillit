@@ -13,28 +13,56 @@
 typedef enum	e_tetra_id
 {
 	error				= 0,
-	quad				= 1,
-	i_vertical			= 2,
-	i_horizontal		= 4,
-	z_vertical			= 8,
-	z_horizontal		= 16,
-	s_vertical			= 32,
-	s_horizontal		= 64,
-	l_vertical_up		= 128,
-	l_vertical_down		= 256,
-	l_horizontal_right	= 512,
-	l_horizontal_left	= 1024,
-	j_vertical_up		= 2048,
-	j_vertical_down		= 4096,
-	j_horizontal_right	= 8192,
-	j_horizontal_left	= 16384,
-	t_up				= 32768,
-	t_right				= 65536,
-	t_down				= 131072,
-	t_left				= 262144
+	l_horizontal_right		= 1,
+	j_vertical_down			= 2,
+	t_left				= 3,
+	z_vertical			= 4,
+	t_up				= 5,
+	s_horizontal			= 6,
+	i_vertical			= 7,
+	l_vertical_down			= 8,
+	s_vertical			= 9,
+	t_right				= 10,
+	j_horizontal_left		= 11,
+	l_vertical_up			= 12,
+	z_horizontal			= 13,
+	j_vertical_up			= 14,
+	quad				= 15,
+	j_horizontal_right		= 16,
+	t_down				= 17,
+	l_horizontal_left		= 18,
+	i_horizontal			= 19
 }		t_tetro_id;
 
-
+unsigned short int	tetra_value[20] = 
+{0, 11776, 17600, 19520, 19584,
+19968, 27648, 34952, 35008, 35904,
+35968, 36352, 50240, 50688, 51328,
+52224, 57856, 58368, 59392, 61440};
+/*
+void	init_tetra_value()
+{
+tetra_value[0] = 0;
+tetra_value[1] = 11776;
+tetra_value[2] = 17600;
+tetra_value[3] = 19520;
+tetra_value[4] = 19584;
+tetra_value[5] = 19968;
+tetra_value[6] = 27648;
+tetra_value[7] = 34952;
+tetra_value[8] = 35008;
+tetra_value[9] = 35904;
+tetra_value[10] = 35968;
+tetra_value[11] = 36352;
+tetra_value[12] = 50240;
+tetra_value[13] = 50688;
+tetra_value[14] = 51328;
+tetra_value[15] = 52224;
+tetra_value[16] = 57856;
+tetra_value[17] = 58368;
+tetra_value[18] = 59392;
+tetra_value[19] = 61440;
+}*/
 int	ft_strcountchr(const char *str, int c)
 {
 	int result;
@@ -51,55 +79,63 @@ int	ft_strcountchr(const char *str, int c)
 	return (result);
 }
 
-/**/
-
-int	ft_stoi_bit(const char *str, int *number)
+int	get_tetra_id(unsigned short int number, size_t prev_bb, size_t prev_hb, size_t b_border, size_t h_border)
 {
-	int		result;
-	int		count;
-	size_t		len;
-	size_t		first_entry;
+	ft_putnbr((int)tetra_value[((h_border - b_border) / 2)]);
+	ft_putnbr((int)((h_border - b_border) / 2));
+	write(1, "--\n", 3);
+	if (prev_bb == b_border && prev_hb == h_border)
+		return (0);
+
+	if (tetra_value[(int)((h_border - b_border) / 2)] < number)
+		return (get_tetra_id(number, b_border, h_border, (int)((h_border - b_border) / 2), h_border));
+
+	if (tetra_value[(int)((h_border - b_border) / 2)] > number)
+		return (get_tetra_id(number, b_border, h_border, b_border, (int)((h_border - b_border) / 2)));
+
+	return ((int)((h_border - b_border) / 2));
+}
+
+int	ft_stoi_bit(const char *str, unsigned short int *number)
+{
+	int		len;
+	int		skipped;
 
 	if (!number || !str || !*str)
 		return (-1);
 	*number = 0;
 	len = ft_strlen(str);
-	if (len != 16 || ft_strcountchr(str, one) + ft_strcountchr(str, zero) != len)
+	if (len != 16 || ft_strcountchr(str, (int)one) + ft_strcountchr(str, (int)zero) != len)
 		return (-1);
-	count = 0;
-	first_entry = 0;
-	while (*str && (*str == one || *str == zero))
+	skipped = count_skip_columns(str) + count_skip_rows(str) * 4;
+	str += skipped;
+	while (*str)
 	{
-		if (!count && *str == zero)
-			first_entry++;
-		else if (*str == one)
-		{
-			(*number) <<= 1;
-			(*number)++;
-			count++;
-		}
-		else if (*(str + 1))
-		{
-			(*number) <<= 1;
-		}
+		*number <<= 1;
+		if (*str == one)
+			*number += 1;
+		
 		str++;
 	}
-	if (first_entry)
-		(*number) <<= first_entry;
-	if (count != 4)
-	{
-		*number = 0;
-		return (-1);
-	}
+	*number <<= skipped;
 	return (1);
 }
+
+
+
 int	main()
 {
-	char	*str = "0000111100000000";
-	int	numb;
-
+	char	*str = "0000000000110011";
+	unsigned short	int	numb;
+	
+//	init_tetra_value();
 	printf("==%d==\n",ft_stoi_bit(str, &numb));
-	printf("%d", numb);
+	printf("%d\n", numb);
+	for (int i = 0; i < 20; i++)
+	{
+		printf("%d\t", tetra_value[i]);
+	}
+	printf("\n%d\n", get_tetra_id(numb, 0, 0, 0, 20));
 	return (0);
 }
 /*
