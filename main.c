@@ -152,17 +152,14 @@ void		arr_t_tetro_copy(t_tetro **arr_dest, const t_tetro *arr_src, size_t tetro_
 int 		get_tetros(t_tetro **tetro_array, int fd)
 {
 	t_tetro			*ptetro_array;
-	unsigned int	count;
 	unsigned int	pos;
 
-	count = 0;
 	pos = 1;
-	
-	ptetro_array = (t_tetro *)malloc (sizeof(t_tetro) * 28);
-	tetro_array = &ptetro_array;
+	(*tetro_array) = (t_tetro *)malloc (sizeof(t_tetro) * 28);
+	ptetro_array = *tetro_array;
 	ptetro_array->tetro_id = start;
 	ptetro_array->pos = -1;
-	while ((ptetro_array[pos].tetro_id = read_one_tetro(fd)) != end)
+	while ((ptetro_array[pos].tetro_id = (t_tetro_id)read_one_tetro(fd)) != end)
 	{
 		ptetro_array[pos].pos = -1;
 		if (ptetro_array[pos].tetro_id == error || pos > 26)
@@ -285,7 +282,7 @@ int			main(int argc, char **argv)
 	t_tetro *result;
 	pos = 0;
 	get_tetros(&result, fd);
-	while (result[pos].tetro_id != 20)
+	while (result[pos].tetro_id != (t_tetro_id)20)
 	{
 		printf("%d\t", result[pos].tetro_id);
 		pos++;

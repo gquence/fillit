@@ -132,6 +132,7 @@ int		read_one_tetro(const int fd)
 	int					ret;
 
 	len = 0;
+	ft_memset((void *)line, 0, 16);
 	while ((ret = get_next_line(fd, &str)) == 1)
 	{
 		if (ft_strlen(str) != 4)
@@ -142,15 +143,14 @@ int		read_one_tetro(const int fd)
 					free(str);
 					return (-1);
 				}
-		ft_strcat(line, str);
+		ft_strncat(line, str, 4);
 		free(str);
 		if (len > 4)	
 			return (-1);
 		len++;
 	}
-	if (ret == 0)
+	if (ret == 0 && len == 0)
 		return (20);
-	ft_strcat(line, str);
 	line[16] = 0;
 	return (get_tetro_id(line));
 }
