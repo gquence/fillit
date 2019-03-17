@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "fillit.h"
 
+
+
 int		count_skip_rows(const char *str)
 {
 	int count;
