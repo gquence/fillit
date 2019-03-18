@@ -149,6 +149,7 @@ int		read_one_tetro(const int fd)
 			return (-1);
 		len++;
 	}
+	free (str);
 	if (ret == 0 && len == 0)
 		return (20);
 	line[16] = 0;

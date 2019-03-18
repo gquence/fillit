@@ -155,8 +155,7 @@ int 		get_tetros(t_tetro **tetro_array, int fd)
 	unsigned int	pos;
 
 	pos = 1;
-	(*tetro_array) = (t_tetro *)malloc (sizeof(t_tetro) * 28);
-	ptetro_array = *tetro_array;
+	ptetro_array = (t_tetro *)malloc (sizeof(t_tetro) * 28);
 	ptetro_array->tetro_id = start;
 	ptetro_array->pos = -1;
 	while ((ptetro_array[pos].tetro_id = (t_tetro_id)read_one_tetro(fd)) != end)
@@ -170,8 +169,8 @@ int 		get_tetros(t_tetro **tetro_array, int fd)
 		}
 		pos++;
 	}
-	//arr_t_tetro_copy(tetro_array, rptetro_array, pos - 1);
-	//free(rptetro_array);
+	arr_t_tetro_copy(tetro_array, ptetro_array, pos - 1);
+	free(ptetro_array);
 	return (pos - 1);
 }
 
@@ -287,6 +286,7 @@ int			main(int argc, char **argv)
 		printf("%d\t", result[pos].tetro_id);
 		pos++;
 	}
+	free(result);
 	//find_solution(fd);
 	return (0);
 }
