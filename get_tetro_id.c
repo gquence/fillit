@@ -90,7 +90,7 @@ static int		find_tetro_id(unsigned short int number, size_t prev_bb, size_t prev
 
 	pos = (int)((h_border - b_border) / 2) + b_border;
 	if (prev_bb == b_border && prev_hb == h_border)
-		return (-1);
+		return ((int)error);
 	if (tetra_value[pos] < number)
 		return (find_tetro_id(number, b_border, h_border, pos, h_border));
 	if (tetra_value[pos] > number)
@@ -106,11 +106,11 @@ int     get_tetro_id(const char *str)
 	int					skipped;
 
 	if (!str || !*str)
-		return (-1);
+		return ((int)error);
 	number = 0;
 	len = strlen(str);
 	if (len != 16 || ft_strcountchr(str, (int)one) + ft_strcountchr(str, (int)zero) != len)
-		return (-1);
+		return ((int)error);
 	skipped = count_skip_columns(str) + count_skip_rows(str) * 4;
 	str += skipped;
 	while (*str)
@@ -141,17 +141,17 @@ int		read_one_tetro(const int fd)
 				else
 				{
 					free(str);
-					return (-1);
+					return ((int)error);
 				}
 		ft_strncat(line, str, 4);
 		free(str);
 		if (len > 4)	
-			return (-1);
+			return ((int)error);
 		len++;
 	}
 	free (str);
 	if (ret == 0 && len == 0)
-		return (20);
+		return ((int)end);
 	line[16] = 0;
 	return (get_tetro_id(line));
 }

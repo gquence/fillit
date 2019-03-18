@@ -281,7 +281,7 @@ int			main(int argc, char **argv)
 	t_tetro *result;
 	pos = 0;
 	get_tetros(&result, fd);
-	while (result[pos].tetro_id != (t_tetro_id)20)
+	while (result[pos].tetro_id != end)
 	{
 		printf("%d\t", result[pos].tetro_id);
 		pos++;
