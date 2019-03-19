@@ -97,6 +97,32 @@ static int		find_tetro_id(unsigned short int number, size_t prev_bb, size_t prev
 		return (find_tetro_id(number, b_border, h_border, b_border, pos));
 	return (pos);
 }
+static int		find_tetro_id1(const unsigned short int number, size_t b_border, size_t h_border)
+{
+	size_t	prev_bb;
+	size_t	prev_hb;
+	int		pos;
+
+	while (prev_bb != b_border || prev_hb != h_border)
+	{
+		pos = (int)((h_border - b_border) / 2) + b_border;
+		if (tetra_value[pos] == number)
+			return (pos);
+		if (tetra_value[pos] < number)
+		{
+			prev_bb = b_border;
+			prev_hb = h_border;
+			b_border = pos;
+		}
+		if (tetra_value[pos] > number)
+		{
+			prev_bb = b_border;
+			prev_hb = h_border;
+			h_border = pos;
+		}		
+	}
+	return ((int)error);
+}
 
 
 int     get_tetro_id(const char *str)
@@ -121,7 +147,7 @@ int     get_tetro_id(const char *str)
 		str++;
 	}
 	number <<= skipped;
-	return (find_tetro_id(number, 0, 0, 1, 20));
+	return (find_tetro_id1(number, 1, 20));
 }
 
 int		read_one_tetro(const int fd)
@@ -149,8 +175,7 @@ int		read_one_tetro(const int fd)
 			return ((int)error);
 		len++;
 	}
-	free (str);
-	if (ret == 0 && len == 0)
+	if (ret == 0 && len == 0 && !line[0])
 		return ((int)end);
 	line[16] = 0;
 	return (get_tetro_id(line));
