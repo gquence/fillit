@@ -156,11 +156,18 @@ int		read_one_tetro(const int fd)
 	char				*str;
 	short unsigned int	len;
 	int					ret;
+	static int		koef;
 
 	len = 0;
-	ft_memset((void *)line, 0, 16);
+	koef = 0;
+	ft_memset((void *)line, 0, 17);
 	while ((ret = get_next_line(fd, &str)) == 1)
 	{
+		if (!ft_strlen(str))
+		{
+			koef = 1;
+			break ;
+		}
 		if (ft_strlen(str) != 4)
 				if (len == 4)
 					break ;
@@ -175,8 +182,9 @@ int		read_one_tetro(const int fd)
 			return ((int)error);
 		len++;
 	}
-	if (ret == 0 && len == 0 && !line[0])
+	if (!ret && !len && !koef)
 		return ((int)end);
-	line[16] = 0;
+	if (!ret && len)
+		return ((int)(error));
 	return (get_tetro_id(line));
 }
