@@ -82,22 +82,8 @@ static int		count_skip_columns(const char *str)
 
 //***ищет номер тетромино в массиве выше
 //first arg - число с кодом тетромино,
-//second and third args - args for checking the infinity recursive(уходит в бесконечную рекурсию, если number находится между какими-то значениями),
-//fourth and fifth - изначальные границы 
-static int		find_tetro_id(unsigned short int number, size_t prev_bb, size_t prev_hb, size_t b_border, size_t h_border)
-{
-	int					pos;
-
-	pos = (int)((h_border - b_border) / 2) + b_border;
-	if (prev_bb == b_border && prev_hb == h_border)
-		return ((int)error);
-	if (tetra_value[pos] < number)
-		return (find_tetro_id(number, b_border, h_border, pos, h_border));
-	if (tetra_value[pos] > number)
-		return (find_tetro_id(number, b_border, h_border, b_border, pos));
-	return (pos);
-}
-static int		find_tetro_id1(const unsigned short int number, size_t b_border, size_t h_border)
+//second and third - изначальные границы 
+static int		find_tetro_id(const unsigned short int number, size_t b_border, size_t h_border)
 {
 	size_t	prev_bb;
 	size_t	prev_hb;
@@ -147,7 +133,35 @@ int     get_tetro_id(const char *str)
 		str++;
 	}
 	number <<= skipped;
-	return (find_tetro_id1(number, 1, 20));
+	return (find_tetro_id(number, 1, 20));
+}
+
+int		check_string(char **pstr, int *koef, int len)
+{
+	char	*str;
+
+	str = *pstr;
+	if (!ft_strlen(str))
+	{
+		*koef = 1;
+		return ((int)end);
+	}
+	if (ft_strlen(str) != 4)
+	{
+		if (len == 4)
+			return ((int)end);
+		else
+		{
+			free(str);
+			return ((int)error);
+		}
+	}
+	if (len > 4)	
+	{
+		free(str);
+		return ((int)error);
+	}
+	return ((int)start);
 }
 
 int		read_one_tetro(const int fd)
@@ -159,32 +173,22 @@ int		read_one_tetro(const int fd)
 	static int		koef;
 
 	len = 0;
-	koef = 0;
 	ft_memset((void *)line, 0, 17);
 	while ((ret = get_next_line(fd, &str)) == 1)
 	{
-		if (!ft_strlen(str))
-		{
-			koef = 1;
-			break ;
-		}
-		if (ft_strlen(str) != 4)
-				if (len == 4)
-					break ;
-				else
-				{
-					free(str);
-					return ((int)error);
-				}
+		if ((ret = check_string(&str, &koef, len)) == (int)error)
+			return ((int)error);
+		if (ret == (int)end)
+			break;
+		koef = 0;
 		ft_strncat(line, str, 4);
 		free(str);
-		if (len > 4)	
-			return ((int)error);
 		len++;
 	}
-	if (!ret && !len && !koef)
+	free (str);
+	if (!ret && koef)
+		return ((int)error);
+	if (!ret && !koef && !len)
 		return ((int)end);
-	if (!ret && len)
-		return ((int)(error));
 	return (get_tetro_id(line));
 }
