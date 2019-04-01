@@ -136,59 +136,64 @@ int     get_tetro_id(const char *str)
 	return (find_tetro_id(number, 1, 20));
 }
 
-int		check_string(char **pstr, int *koef, int len)
+int		convert_to_tetro(const char *line, char *ptetro)
 {
-	char	*str;
+	int		i;
+	char	*tetro;
 
-	str = *pstr;
-	if (!ft_strlen(str))
+	i = 0;
+	tetro = ptetro;
+	while (i != 4)
 	{
-		*koef = 1;
+		if (line[i] != (char)zero && line[i] != (char)one)
+			return (0);
+		tetro[i] = line[i];
+		i++;
+	}
+	if (line[i] != '\n')
+		return (0);
+	return(1);
+
+}
+
+int		check_ret(const int ret, int *n_koef, char *line)
+{
+	if (!ret && !(*n_koef))
 		return ((int)end);
-	}
-	if (ft_strlen(str) != 4)
-	{
-		if (len == 4)
-			return ((int)end);
-		else
-		{
-			free(str);
-			return ((int)error);
-		}
-	}
-	if (len > 4)	
-	{
-		free(str);
+	if (ret != 21 && ret != 20)
 		return ((int)error);
+	if (ret == 21)
+	{
+		if (line[20] != '\n')
+			return ((int)error);
+		*n_koef = 1;
 	}
+	else
+		*n_koef = 0;
 	return ((int)start);
 }
 
 int		read_one_tetro(const int fd)
 {
-	char				line[17];
-	char				*str;
-	short unsigned int	len;
+	char				line[22];
+	char				tetro_line[17];
+	int					line_count;
 	int					ret;
-	static int		koef;
+	static int				n_koef;
 
-	len = 0;
-	ft_memset((void *)line, 0, 17);
-	while ((ret = get_next_line(fd, &str)) == 1)
-	{
-		if ((ret = check_string(&str, &koef, len)) == (int)error)
-			return ((int)error);
-		if (ret == (int)end)
-			break;
-		koef = 0;
-		ft_strncat(line, str, 4);
-		free(str);
-		len++;
-	}
-	free (str);
-	if (!ret && koef)
-		return ((int)error);
-	if (!ret && !koef && !len)
+	ft_memset((void *)line, 0, 22);
+	ft_memset((void *)tetro_line, 0, 17);
+	ret = read(fd, &line, 21);
+	if ((line_count = check_ret(ret, &n_koef, line)) == (int)end)
 		return ((int)end);
-	return (get_tetro_id(line));
+	if (line_count == (int)error)
+		return ((int)error);
+	line_count = 0;
+	while (line_count != 4)
+	{
+		if (!convert_to_tetro((line + (line_count * 5)), (tetro_line + (line_count * 4))))
+			return ((int)error);
+		line_count++;
+	}
+	return (get_tetro_id(tetro_line));
 }
