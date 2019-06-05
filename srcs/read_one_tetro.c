@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_one_tetro.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gquence <gquence@student.42.fr>            +#+  +:+       +#+        */
+/*   By: dmelessa <dmelessa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 12:48:40 by gquence           #+#    #+#             */
-/*   Updated: 2019/04/09 12:51:06 by gquence          ###   ########.fr       */
+/*   Updated: 2019/04/15 14:26:38 by dmelessa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,15 @@ unsigned short int	g_tetra_value[20] =
 	61440
 };
 
-int		find_tetro_id(const unsigned short int number,
+int				find_tetro_id(const unsigned short int number,
 							size_t b_border, size_t h_border)
 {
 	size_t	prev_bb;
 	size_t	prev_hb;
 	int		pos;
 
+	prev_bb = 100;
+	prev_hb = 100;
 	while (prev_bb != b_border || prev_hb != h_border)
 	{
 		pos = (int)((h_border - b_border) / 2) + b_border;
@@ -64,7 +66,7 @@ int		find_tetro_id(const unsigned short int number,
 	return ((int)error);
 }
 
-int		convert_to_tetro(const char *line, char *ptetro)
+int				convert_to_tetro(const char *line, char *ptetro)
 {
 	int		i;
 	char	*tetro;
@@ -73,14 +75,14 @@ int		convert_to_tetro(const char *line, char *ptetro)
 	tetro = ptetro;
 	while (i != 4)
 	{
-		if (line[i] != (char)zero && line[i] != (char)one)
+		if (line[i] != (char)ZERO && line[i] != (char)ONE)
 			return (0);
 		tetro[i] = line[i];
 		i++;
 	}
 	if (line[i] != '\n')
 		return (0);
-	return(1);
+	return (1);
 }
 
 static int		check_ret(const int ret, int *n_koef, char *line)
@@ -100,13 +102,13 @@ static int		check_ret(const int ret, int *n_koef, char *line)
 	return ((int)start);
 }
 
-int		read_one_tetro(const int fd)
+int				read_one_tetro(const int fd)
 {
 	char				line[22];
 	char				tetro_line[17];
 	int					line_count;
 	int					ret;
-	static int				n_koef;
+	static int			n_koef;
 
 	ft_memset((void *)line, 0, 22);
 	ft_memset((void *)tetro_line, 0, 17);
@@ -118,24 +120,30 @@ int		read_one_tetro(const int fd)
 	line_count = 0;
 	while (line_count != 4)
 	{
-		if (!convert_to_tetro((line + (line_count * 5)), (tetro_line + (line_count * 4))))
+		if (!convert_to_tetro((line + (line_count * 5)),
+				(tetro_line + (line_count * 4))))
 			return ((int)error);
 		line_count++;
 	}
 	return (get_tetro_id(tetro_line));
 }
 
-// передаем адресс указателя, который должен указывать на массив тетрамино
-// возвращает количество тетрамино
-int 		get_tetros(t_tetro **tetro_array, int fd)
+/*
+** передаем адресс указателя, который должен указывать на массив тетрамино
+** возвращает количество тетрамино
+*/
+
+int				get_tetros(t_tetro **tetro_array, int fd)
 {
 	int	pos;
 
 	pos = 0;
-	*tetro_array = (t_tetro *)malloc (sizeof(t_tetro) * 28);
+	*tetro_array = (t_tetro *)malloc(sizeof(t_tetro) * 28);
 	(*tetro_array)->tetro_id = start;
 	(*tetro_array)->pos = -1;
-	while ((((*tetro_array) + ++pos)->tetro_id = (t_tetro_id)read_one_tetro(fd)) != end)
+	while ((((*tetro_array) + ++pos)->tetro_id =
+			(t_tetro_id)read_one_tetro(fd)) != end
+			|| ((*tetro_array) + 1)->tetro_id == end)
 	{
 		((*tetro_array) + pos)->pos = -1;
 		if (((*tetro_array) + pos)->tetro_id == error || pos > 26)

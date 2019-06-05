@@ -6,15 +6,19 @@
 /*   By: gquence <gquence@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/18 11:49:44 by dmelessa          #+#    #+#             */
-/*   Updated: 2019/04/09 13:02:15 by gquence          ###   ########.fr       */
+/*   Updated: 2019/04/14 19:03:06 by gquence          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
+#include <unistd.h>
 
-//в массиве хранятся функции размещения на поле для каждого тетармино
-place_func	g_place_funcs[] =
-{	
+/*
+**в массиве хранятся функции размещения на поле для каждого тетармино
+*/
+
+t_place_func	g_place_funcs[] =
+{
 	NULL,
 	place_l_horizontal_right,
 	place_j_vertical_down,
@@ -37,7 +41,7 @@ place_func	g_place_funcs[] =
 	place_i_horizontal,
 };
 
-del_func	g_del_funcs[] =
+t_del_func	g_del_funcs[] =
 {
 	NULL,
 	del_l_horizontal_right,
@@ -62,23 +66,24 @@ del_func	g_del_funcs[] =
 };
 
 /*
-** Принимает ссылку указателя на поле field размера size и указатель на терамино,
+** Принимает ссылку указателя на поле field размера size
+** и указатель на терамино,
 ** которое надо поставить на позицию pos
 ** pos имзеняется внутри функции
 ** возвращет целочисленное значени
 ** 0 - значить не удалось поставить
-** 1 - поставили тетрамино на позицию pos 
+** 1 - поставили тетрамино на позицию pos
 ** -1 - больше некуда ставить
 ** если tetro_id == start возвращает 1
 */
-int 		place_figure(long *field, int size, int *pos, t_tetro *tetro_ref)
+
+int			place_figure(long *field, int size, int *pos, t_tetro *tetro_ref)
 {
-	int			status;
+	int	status;
 
 	if (tetro_ref->tetro_id == start)
 		return (1);
-	status = (*(g_place_funcs + tetro_ref->tetro_id))(field, size, *pos);// получаем отдельную
-	// функцию размещения для тетрамино в зависимости от tetra_id
+	status = (*(g_place_funcs + tetro_ref->tetro_id))(field, size, *pos);
 	if (status == 1)
 	{
 		tetro_ref->pos = *pos;
@@ -91,10 +96,12 @@ int 		place_figure(long *field, int size, int *pos, t_tetro *tetro_ref)
 }
 
 /*
-** удаляет тетрамино tetro_array с поля field размером field_size на позиции pos,
+** удаляет тетрамино tetro_array
+** с поля field размером field_size на позиции pos,
 ** pos устанавливается на единицу большим, чем текущее положение тетрамино
 */
-int del_figure(long *field, int size, t_tetro *ptetro, int *pos)
+
+int			del_figure(long *field, int size, t_tetro *ptetro, int *pos)
 {
 	if (ptetro->tetro_id == start)
 	{
@@ -107,38 +114,37 @@ int del_figure(long *field, int size, t_tetro *ptetro, int *pos)
 	return (0);
 }
 
-void 		find_solution(int fd)
+void		find_solution(int fd)
 {
 	t_tetro	*tetro_array;
-	long 	field[16];
-	int 	status;
-	int 	field_size;
-	int 	pos;//pos -- позиция поля, на которую ставим тетрамино
+	long	field[16];
+	int		status;
+	int		field_size;
+	int		pos;
 
-	field_size = (0.99 + ft_sqrt(4 * get_tetros(&tetro_array, fd))); // минимально требуемый размер для поля
+	field_size = (0.99 + ft_sqrt(4 * get_tetros(&tetro_array, fd)));
 	ft_bzero(field, sizeof(long) * field_size);
 	pos = 0;
-	while ((tetro_array)->tetro_id != end) // цикл где происходят размещения
+	while ((tetro_array)->tetro_id != end)
 	{
 		status = place_figure((long *)field, field_size, &pos, tetro_array);
-		if (status == 0) // не удалось поставить
+		if (status == 0)
 			pos++;
-		else if (status == 1) // поставили
-			tetro_array++;	//pos = 0
-		else if (status == -1) // больше некуда ставить
+		else if (status == 1)
+			tetro_array++;
+		else if (status == -1)
 		{
-			tetro_array--;		
+			tetro_array--;
 			if (del_figure((long *)field, field_size, tetro_array, &pos) == 1)
 				ft_bzero(field, sizeof(long) * ++field_size);
-		}	
+		}
 	}
 	print_field(field_size, &tetro_array);
-	free(tetro_array);
 }
 
 int			main(int argc, char **argv)
 {
-	int 	fd;
+	int fd;
 
 	if (argc != 2)
 	{

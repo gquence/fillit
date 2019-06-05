@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   t_left.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelessa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dmelessa <dmelessa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/20 01:22:48 by dmelessa          #+#    #+#             */
-/*   Updated: 2019/03/20 01:22:48 by dmelessa         ###   ########.fr       */
+/*   Updated: 2019/04/15 14:19:53 by dmelessa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,26 +17,27 @@
 ** ##
 **  #
 */
+
 int		place_t_left(long *field, int field_size, int pos)
 {
-	int 	column;
-	int 	row;
-	
+	int	column;
+	int	row;
+
 	if (pos >= (field_size * (field_size - 2)))
 		return (-1);
-	row = pos % field_size;	
+	row = pos % field_size;
 	if (row == 0)
 		return (0);
 	column = pos / field_size;
-	if (check_bit(*(field + column), row)
-		&& check_bit(*(field + column + 1), row - 1)
-		&& check_bit(*(field + column + 1), row)
-		&& check_bit(*(field + column + 2), row))
+	if (CHECK_BIT(*(field + column), row)
+		&& CHECK_BIT(*(field + column + 1), row - 1)
+		&& CHECK_BIT(*(field + column + 1), row)
+		&& CHECK_BIT(*(field + column + 2), row))
 	{
-		set_bit(*(field + column), row);
-		set_bit(*(field + column + 1), row - 1);
-		set_bit(*(field + column + 1), row);
-		set_bit(*(field + column + 2), row);
+		SET_BIT(*(field + column), row);
+		SET_BIT(*(field + column + 1), row - 1);
+		SET_BIT(*(field + column + 1), row);
+		SET_BIT(*(field + column + 2), row);
 		return (1);
 	}
 	return (0);
@@ -49,21 +50,21 @@ void	del_t_left(long *field, int size, int pos)
 
 	column = pos / size;
 	row = pos % size;
-	zero_bit(*(field + column), row);
-	zero_bit(*(field + column + 1), row - 1);
-	zero_bit(*(field + column + 1), row);
-	zero_bit(*(field + column + 2), row);
+	ZERO_BIT(*(field + column), row);
+	ZERO_BIT(*(field + column + 1), row - 1);
+	ZERO_BIT(*(field + column + 1), row);
+	ZERO_BIT(*(field + column + 2), row);
 }
 
 void	out_t_left(char **field, int pos, char c, int field_size)
 {
-    int 	column;
-	int 	row;
+	int column;
+	int	row;
 
-    row = pos / field_size;
+	row = pos / field_size;
 	column = pos % field_size;
-    field[row][column] = c;
-    field[row + 1][column] = c;
-    field[row + 1][column - 1] = c;
-    field[row + 2][column] = c;
+	field[row][column] = c;
+	field[row + 1][column] = c;
+	field[row + 1][column - 1] = c;
+	field[row + 2][column] = c;
 }

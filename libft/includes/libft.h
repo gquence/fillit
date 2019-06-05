@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_libft.h                                         :+:      :+:    :+:   */
+/*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelessa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dmelessa <dmelessa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/05 16:59:08 by dmelessa          #+#    #+#             */
-/*   Updated: 2019/02/19 14:13:53 by dmelessa         ###   ########.fr       */
+/*   Updated: 2019/04/15 14:15:02 by dmelessa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+# define BUFF_SIZE 32
+# define ABS(x) (((x) < 0) ? (-(x)) : (x))
+
 typedef struct		s_list
 {
 	void			*content;
@@ -24,10 +27,7 @@ typedef struct		s_list
 	struct s_list	*next;
 }					t_list;
 
-# define BUFF_SIZE 32
-
 int					get_next_line(const int fd, char **line);
-
 void				*ft_memset(void *b, int c, size_t len);
 void				ft_bzero(void *s, size_t n);
 void				*ft_memcpy(void *dst, const void *src,
@@ -103,6 +103,6 @@ void				ft_lstadd(t_list **alst, t_list *newl);
 void				ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 t_list				*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 
-float 				ft_sqrt(int a);
+float				ft_sqrt(int a);
 
 #endif

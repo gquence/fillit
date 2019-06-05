@@ -3,23 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   ft_sqrt.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelessa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dmelessa <dmelessa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/13 00:41:51 by dmelessa          #+#    #+#             */
-/*   Updated: 2019/04/13 00:41:51 by dmelessa         ###   ########.fr       */
+/*   Updated: 2019/04/15 14:16:48 by dmelessa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-# define ABS(x) (((x) < 0) ? (-(x)) : (x))
-
-float 		ft_sqrt(int a)
+float	ft_sqrt(int a)
 {
-    float y;
+	float	y;
 
 	y = a / 2;
-    while (ABS(y * y - a) > 0.001)
-        y = (a / y + y) / 2;
+	while (1)
+	{
+		if (ABS(y * y - a) < 0.001)
+			break ;
+		y = (a / y + y) / 2;
+	}
 	return (y);
 }

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   print_field.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelessa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dmelessa <dmelessa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/12 23:38:38 by dmelessa          #+#    #+#             */
-/*   Updated: 2019/04/12 23:38:38 by dmelessa         ###   ########.fr       */
+/*   Updated: 2019/04/15 14:26:21 by dmelessa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-out_func	g_out_funcs[] =
+t_out_func	g_out_funcs[] =
 {
 	NULL,
 	out_l_horizontal_right,
@@ -38,9 +38,10 @@ out_func	g_out_funcs[] =
 
 void	print_figures(char **field, t_tetro *tetro_array, int size)
 {
-	t_tetro *buft = tetro_array;
+	t_tetro *buft;
 	char	symb;
 
+	buft = tetro_array;
 	symb = 'A';
 	while (tetro_array->tetro_id != end)
 	{
@@ -50,14 +51,13 @@ void	print_figures(char **field, t_tetro *tetro_array, int size)
 		tetro_array++;
 		symb++;
 	}
-	while(size-- > 0)
+	while (size-- > 0)
 	{
 		ft_putendl(*field);
 		free(*field);
-        field++;
+		field++;
 	}
 	free(buft);
-	free(field);
 }
 
 int		print_field(int field_size, t_tetro **tetro_array)
@@ -72,19 +72,17 @@ int		print_field(int field_size, t_tetro **tetro_array)
 	{
 		if (!(*(field + buf) = (char *)malloc(sizeof(char) * (field_size + 1))))
 		{
-			while (!buf)
-			{
-				buf--;
-				free ((*(field + buf)));
-			}
+			while (--buf != -1)
+				free((*(field + buf)));
 			free(field);
 			return (0);
 		}
-		ft_bzero(*(field + buf), field_size + 1);
-        ft_memset((void *)*(field + buf), (char)zero, field_size);
+		field[buf][field_size] = '\0';
+		ft_memset((void *)*(field + buf), (char)ZERO, field_size);
 	}
 	while ((*tetro_array)->tetro_id != start)
 		(*tetro_array)--;
 	print_figures(field, *tetro_array, field_size);
+	free(field);
 	return (1);
 }
