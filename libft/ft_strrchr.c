@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gquence <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: dmelessa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/29 17:13:01 by gquence           #+#    #+#             */
-/*   Updated: 2019/01/29 18:13:06 by gquence          ###   ########.fr       */
+/*   Created: 2019/02/06 01:51:02 by dmelessa          #+#    #+#             */
+/*   Updated: 2019/02/06 01:54:16 by dmelessa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 
 char	*ft_strrchr(const char *s, int c)
 {
-	char *s1;
+	const char *p;
+	const char *rp;
 
-	s1 = (char *)s;
-	while (*s)
-		s++;
-	if (c == 0)
-		return ((char *)s);
-	while (s >= s1)
-		if (*s-- == c)
-			return ((char *)++s);
-	return (NULL);
+	if (c == '\0')
+		return (ft_strchr(s, '\0'));
+	rp = NULL;
+	while ((p = ft_strchr(s, c)) != NULL)
+	{
+		rp = p;
+		s = p + 1;
+	}
+	return ((char *)rp);
 }

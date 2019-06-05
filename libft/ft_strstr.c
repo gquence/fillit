@@ -3,39 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gquence <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: dmelessa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/29 17:14:43 by gquence           #+#    #+#             */
-/*   Updated: 2019/02/17 13:03:32 by gquence          ###   ########.fr       */
+/*   Created: 2019/02/06 01:54:32 by dmelessa          #+#    #+#             */
+/*   Updated: 2019/02/06 08:06:09 by dmelessa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+/*
+** Determine length of NEEDLE, and in the process, make sure
+** HAYSTACK is at least as long (no point processing all of a long
+** NEEDLE if HAYSTACK is too short).
+*/
+
 char	*ft_strstr(const char *haystack, const char *needle)
 {
-	char *sbuf2;
-	char *sbuf1;
+	const char	*pneedle;
+	const char	*phaystack;
+	int			ok;
 
-	sbuf2 = (char *)needle;
-	if (!*haystack && !*needle)
-		return ((char *)haystack);
-	while (*haystack)
-	{
-		sbuf1 = (char *)haystack;
-		while (*(char *)haystack == *sbuf2 && *haystack && *sbuf2)
-		{
-			haystack++;
-			sbuf2++;
-		}
-		if (*sbuf2 != 0)
-		{
-			sbuf2 = (char *)needle;
-			haystack = (const char *)sbuf1;
-		}
+	ok = 1;
+	pneedle = needle;
+	phaystack = haystack;
+	while (*phaystack && *pneedle)
+		ok &= *phaystack++ == *pneedle++;
+	if (*pneedle)
+		return (NULL);
+	if (ok)
+		return ((char *)(haystack));
+	pneedle = needle;
+	while (*haystack && *needle)
+		if (*haystack++ == *needle)
+			needle++;
 		else
-			return ((char *)haystack - (sbuf2 - (char *)needle));
-		haystack++;
-	}
-	return (NULL);
+		{
+			haystack -= needle - pneedle;
+			needle = pneedle;
+		}
+	return (*(needle) ? NULL : (char *)(haystack - (needle - pneedle)));
 }

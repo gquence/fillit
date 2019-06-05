@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gquence <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: dmelessa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/29 18:17:30 by gquence           #+#    #+#             */
-/*   Updated: 2019/02/17 17:06:28 by gquence          ###   ########.fr       */
+/*   Created: 2019/02/06 04:28:25 by dmelessa          #+#    #+#             */
+/*   Updated: 2019/02/14 20:02:33 by dmelessa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*ft_itoa(int n)
 		size++;
 	if (!(p = (char *)malloc(size + sign + 1)))
 		return (NULL);
-	*(p + sign + size) = '\0';
+	*(p + size + sign) = '\0';
 	if (sign)
 		*p++ = '-';
 	while (size--)

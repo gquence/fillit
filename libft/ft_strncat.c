@@ -3,26 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gquence <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: dmelessa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/29 17:10:29 by gquence           #+#    #+#             */
-/*   Updated: 2019/01/29 17:43:06 by gquence          ###   ########.fr       */
+/*   Created: 2019/02/06 01:33:24 by dmelessa          #+#    #+#             */
+/*   Updated: 2019/02/17 18:11:34 by dmelessa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strncat(char *restrict s1, const char *restrict s2, size_t n)
+char	*ft_strncat(char *s1, const char *s2, size_t n)
 {
-	char	*s_buf1;
+	char	*pd;
+	char	*ps;
+	size_t	l;
 
-	s_buf1 = s1;
-	while (*s_buf1)
-		s_buf1++;
-	while (*s2 && n--)
+	pd = s1;
+	s1 += ft_strlen(s1);
+	ps = (char *)s2;
+	l = 0;
+	while (*(ps + l))
 	{
-		*s_buf1++ = *s2++;
+		if (l == n)
+			break ;
+		l++;
 	}
-	*s_buf1 = 0;
-	return (s1);
+	*(s1 + l) = '\0';
+	ft_memcpy(s1, s2, l);
+	return (pd);
 }

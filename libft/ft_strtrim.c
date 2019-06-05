@@ -3,61 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gquence <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: dmelessa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/29 18:09:45 by gquence           #+#    #+#             */
-/*   Updated: 2019/02/14 20:02:21 by gquence          ###   ########.fr       */
+/*   Created: 2019/02/06 04:14:34 by dmelessa          #+#    #+#             */
+/*   Updated: 2019/02/19 17:39:47 by dmelessa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static	int		ft_strlen_wout(const char *str)
+char	*ft_strtrim(char const *s)
 {
-	int i;
+	char		*p;
+	const char	*sp;
+	const char	*ep;
 
-	i = 0;
-	if (!str)
-		return (0);
-	while (*str == ' ' || *str == '\n' || *str == '\t')
-		str++;
-	while (*str)
-	{
-		i++;
-		str++;
-	}
-	while ((*(str - 1) == ' ' || *(str - 1) == '\n' || *(str - 1) == '\t') && i)
-	{
-		i--;
-		str--;
-	}
-	return (i);
-}
-
-char			*ft_strtrim(char const *s)
-{
-	char	*str;
-	char	*buf;
-	int		str_len;
-	int		count;
-
-	count = 0;
 	if (!s)
 		return (NULL);
-	while ((*s == '\n' || *s == '\t' || *s == ' ') && *s)
+	while (ft_isspace(*s))
 		s++;
-	str_len = ft_strlen_wout(s);
-	if (!(str = (char *)malloc(sizeof(*str) * (str_len + 1))))
-		return (NULL);
-	buf = str;
-	while (*s && count < str_len)
+	sp = s;
+	ep = sp;
+	while (*sp)
 	{
-		if (*s == '\n' || *s == '\t' || *s == ' ')
-			if (!*(s + 1))
-				break ;
-		*str++ = (char)*s++;
-		count++;
+		while (*sp && !ft_isspace(*sp))
+			sp++;
+		ep = sp;
+		while (*sp && ft_isspace(*sp))
+			sp++;
 	}
-	*str = 0;
-	return (buf);
+	sp = s;
+	if (!(p = ft_strnew(ep - s)))
+		return (NULL);
+	ft_strncpy(p, s, ep - s);
+	return (p);
 }

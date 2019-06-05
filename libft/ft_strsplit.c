@@ -3,93 +3,54 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strsplit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gquence <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: dmelessa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/29 18:06:16 by gquence           #+#    #+#             */
-/*   Updated: 2019/02/17 19:19:10 by gquence          ###   ########.fr       */
+/*   Created: 2019/02/06 04:19:30 by dmelessa          #+#    #+#             */
+/*   Updated: 2019/02/14 18:42:23 by dmelessa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static size_t	ft_strlen_ch(char const *s, char c)
+static unsigned int	ft_wc(char const *s, char c)
 {
-	int		res;
+	unsigned int wc;
 
-	res = 0;
-	while (*s != c && *s++)
-		res++;
-	return (res);
-}
-
-static char		**ft_free_strs(char ***pstrs)
-{
-	char	**strs;
-
-	if (!pstrs || !*pstrs || !**pstrs)
-		return (NULL);
-	strs = *pstrs;
-	while (*strs)
-	{
-		free(*strs);
-		strs++;
-	}
-	free(*pstrs);
-	return (NULL);
-}
-
-static int		ft_split_count(char const *s, char c)
-{
-	int		i;
-
-	i = 1;
+	wc = 0;
+	while (*s && *s == c)
+		s++;
 	while (*s)
 	{
-		if (!ft_strlen_ch(s, c))
-		{
+		while (*s && *s != c)
 			s++;
-			continue;
-		}
-		else if (ft_strlen_ch(s, c) == ft_strlen(s))
-		{
-			i++;
-			return (i);
-		}
-		else
-		{
-			i++;
-			while (ft_strlen_ch(s, c))
-				s++;
-		}
+		wc++;
+		while (*s && *s == c)
+			s++;
 	}
-	return (i);
+	return (wc);
 }
 
-char			**ft_strsplit(char const *s, char c)
+char				**ft_strsplit(char const *s, char c)
 {
-	char	**strs;
-	char	**buf;
-	char	*s_buf;
+	char		**p;
+	const char	*estr;
+	size_t		i;
 
-	if (!s || !(strs = (char **)malloc(sizeof(*strs) * ft_split_count(s, c))))
+	if (!s || !(p = (char **)malloc((ft_wc(s, c) + 1) * sizeof(char *))))
 		return (NULL);
-	buf = strs;
+	i = 0;
+	while (*s && *s == c)
+		s++;
 	while (*s)
 	{
-		if (!ft_strlen_ch(s, c))
-		{
+		estr = s;
+		while (*estr && *estr != c)
+			estr++;
+		*(p + i++) = ft_strsub(s, 0, estr - s);
+		s = estr;
+		while (*s && *s == c)
 			s++;
-			continue ;
-		}
-		if (!(*strs = (char *)malloc(sizeof(**strs) *
-				(ft_strlen_ch(s, c) + 1))))
-			return (ft_free_strs(&buf));
-		s_buf = *strs;
-		while (ft_strlen_ch(s, c))
-			*s_buf++ = *s++;
-		*s_buf = 0;
-		strs++;
 	}
-	*strs = NULL;
-	return (buf);
+	*(p + i) = NULL;
+	return (p);
 }

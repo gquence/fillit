@@ -3,37 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gquence <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: dmelessa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/01 16:04:05 by gquence           #+#    #+#             */
-/*   Updated: 2019/02/17 18:32:52 by gquence          ###   ########.fr       */
+/*   Created: 2019/02/06 05:05:43 by dmelessa          #+#    #+#             */
+/*   Updated: 2019/02/17 16:13:41 by dmelessa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list		*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem))
+t_list	*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem))
 {
-	t_list	*node;
-	t_list	*node_buf;
+	t_list *retp;
+	t_list *p;
+	t_list *node;
 
-	if (!f || !lst)
+	if (!lst || !f)
 		return (NULL);
-	node = f(lst);
-	node_buf = node;
-	while (lst->next)
+	p = (*f)(lst);
+	retp = p;
+	while ((lst = lst->next))
 	{
-		lst = lst->next;
-		if (!(node->next = f(lst)))
+		if (!(node = (*f)(lst)))
 		{
-			while ((node_buf = node_buf->next))
+			free(node);
+			while (p)
 			{
-				free(node_buf->content);
-				free(node_buf);
+				node = p->next;
+				free(p);
+				p = node;
 			}
 			return (NULL);
 		}
-		node = node->next;
+		p->next = node;
+		p = p->next;
 	}
-	return (node_buf);
+	return (retp);
 }

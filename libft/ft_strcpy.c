@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gquence <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: dmelessa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/29 16:56:10 by gquence           #+#    #+#             */
-/*   Updated: 2019/01/29 16:59:08 by gquence          ###   ########.fr       */
+/*   Created: 2019/02/06 01:24:51 by dmelessa          #+#    #+#             */
+/*   Updated: 2019/02/06 01:27:13 by dmelessa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,5 @@
 
 char	*ft_strcpy(char *dst, const char *src)
 {
-	char *str;
-
-	str = dst;
-	while (*src)
-		*str++ = *src++;
-	*str = '\0';
-	return (dst);
+	return ((char *)ft_memcpy(dst, src, ft_strlen(src) + 1));
 }

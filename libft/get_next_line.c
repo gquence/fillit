@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gquence <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: gquence <gquence@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/03 15:35:51 by gquence           #+#    #+#             */
-/*   Updated: 2019/03/03 16:17:23 by gquence          ###   ########.fr       */
+/*   Updated: 2019/03/22 16:00:04 by gquence          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ static	int			ft_get_line(t_list **plst, char **line)
 	size_t			len_n;
 
 	if (!plst || !*plst || !(char *)((*plst)->content) ||
-	!*(char *)((*plst)->content) || !(len = ft_strlen((char *)(*plst)->content)))
+	!*(char *)((*plst)->content) ||
+	!(len = ft_strlen((char *)(*plst)->content)))
 		return (0);
 	lst = *plst;
 	content = (char *)(lst->content);
@@ -33,11 +34,11 @@ static	int			ft_get_line(t_list **plst, char **line)
 		(lst->content) = (void *)ft_strnew(0);
 		return (1);
 	}
-	*line = ft_strsub(content, 0, len_n);
-	(lst->content) = ft_strsub(content, len_n + 1, (len - len_n));
+	if (!(*line = ft_strsub(content, 0, len_n)) ||
+	!((lst->content) = ft_strsub(content, len_n + 1, (len - len_n))))
+		return (-1);
 	free(content);
 	return (1);
-	
 }
 
 static	t_list		*ft_corr_file(t_list **file, const int fd)
@@ -47,7 +48,12 @@ static	t_list		*ft_corr_file(t_list **file, const int fd)
 	if (fd < 0 || !file)
 		return (NULL);
 	if (!*file)
-		return (*file = ft_lstnew("", fd));
+	{
+		if (!(*file = ft_lstnew("", 1)))
+			return (NULL);
+		(*file)->content_size = fd;
+		return (*file);
+	}
 	lst = *file;
 	while (lst)
 	{
@@ -55,7 +61,9 @@ static	t_list		*ft_corr_file(t_list **file, const int fd)
 			return (lst);
 		lst = lst->next;
 	}
-	lst = ft_lstnew("", fd);
+	if (!(lst = ft_lstnew("", 1)))
+		return (NULL);
+	lst->content_size = fd;
 	ft_lstadd(file, lst);
 	lst = *file;
 	return (lst);
@@ -72,7 +80,7 @@ int					get_next_line(const int fd, char **line)
 	if (fd < 0 || !line || (BUFF_SIZE < 1) ||
 		!(curr = ft_corr_file(&file, fd)))
 		return (-1);
-	if ((ft_strchr((char*)(curr->content),'\n')) && ft_get_line(&curr, line))
+	if ((ft_strchr((char*)(curr->content), '\n')) && ft_get_line(&curr, line))
 		return (1);
 	while ((ret = read(fd, &buf, BUFF_SIZE)))
 	{
@@ -80,7 +88,8 @@ int					get_next_line(const int fd, char **line)
 			return (-1);
 		buf[ret] = 0;
 		content = (char *)(curr->content);
-		curr->content = (char *)ft_strjoin((char *)(curr->content), buf);
+		if (!(curr->content = (void *)ft_strjoin((char *)(curr->content), buf)))
+			return (-1);
 		free(content);
 		if (ret != BUFF_SIZE || ft_strchr((char *)(curr->content), '\n'))
 			break ;

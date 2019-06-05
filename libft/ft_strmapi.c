@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gquence <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: dmelessa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/30 20:59:54 by gquence           #+#    #+#             */
-/*   Updated: 2019/02/14 20:13:16 by gquence          ###   ########.fr       */
+/*   Created: 2019/02/06 03:45:17 by dmelessa          #+#    #+#             */
+/*   Updated: 2019/02/06 03:49:33 by dmelessa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,19 @@
 
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	char	*buf;
-	char	*b;
+	size_t	i;
+	char	*p;
 
-	if (!s || !(buf = (char *)malloc(sizeof(*buf)
-			* (ft_strlen((char *)s) + 1))))
+	i = 0;
+	if (!s || !f)
 		return (NULL);
-	b = buf;
-	if (!f)
+	if (!(p = (char *)malloc(ft_strlen(s) + 1)))
 		return (NULL);
-	while (*s)
+	while (*(s + i))
 	{
-		*buf = f(buf - b, *s);
-		buf++;
-		s++;
+		*(p + i) = f(i, *(s + i));
+		i++;
 	}
-	*buf = 0;
-	return (b);
+	*(p + i) = '\0';
+	return (p);
 }
